@@ -152,6 +152,12 @@ function ProjectCard({ project }) {
 function App() {
   const [formNote, setFormNote] = useState('');
   const [loaded, setLoaded] = useState(false);
+  const [theme, setTheme] = useState(() => window.localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.localStorage.setItem('theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => requestAnimationFrame(() => setLoaded(true)));
@@ -245,6 +251,9 @@ function App() {
           <nav aria-label="Main navigation"><ul>
             <li><a href="#work">Work</a></li><li><a href="#about">About</a></li><li><a href="#services">Services</a></li><li><a href="#contact">Contact</a></li>
           </ul></nav>
+          <button className="theme-toggle" type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`} aria-pressed={theme === 'dark'}>
+            <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span><span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
+          </button>
           <a className="btn mag" href="#contact">Work with me</a>
         </div>
       </header>

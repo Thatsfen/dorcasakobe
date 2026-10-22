@@ -31,3 +31,16 @@ footer{padding:2rem 0;font-size:.9rem;color:var(--soft);background:var(--panel);
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .portrait .frame img{display:block;width:100%;height:100%;object-fit:cover}
 .reels .knitnest-reel{background:var(--bg)}
+
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;flex:none;padding:.55rem .8rem;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--text);font:600 .9rem var(--sans);cursor:pointer;transition:background .25s,color .25s,border-color .25s,transform .25s}
+.theme-toggle:hover{transform:translateY(-2px);border-color:var(--accent)}
+.theme-toggle span:first-child{font-size:1.1rem;line-height:1}
+:root[data-theme="dark"]{--bg:#201a18;--panel:#2d2421;--latte:#705548;--text:#f4eae3;--soft:#c5afa4;--accent:#d49a8b;--on-accent:#241916;--frame:#392d29;--line:rgba(244,234,227,.16);color-scheme:dark}
+:root[data-theme="dark"] body{transition:background-color .3s,color .3s}
+:root[data-theme="dark"] .nav.solid{background:rgba(32,26,24,.88)}
+:root[data-theme="dark"] .skill-group .tags li{background:rgba(255,255,255,.1)}
+:root[data-theme="dark"] input,:root[data-theme="dark"] select,:root[data-theme="dark"] textarea{background:#302724;color:var(--text)}
+:root[data-theme="dark"] select option{background:#302724;color:var(--text)}
+:root[data-theme="dark"] .btn::before{background:#f4eae3}
+:root[data-theme="dark"] .btn:hover{color:#241916}
+@media(max-width:520px){.theme-toggle{width:40px;height:40px;padding:.45rem}.theme-toggle span:last-child{display:none}}
