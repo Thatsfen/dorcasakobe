@@ -45,16 +45,54 @@ function PlaceholderFrame({ children }) {
 
 function LoopVideo({ src, title }) {
   const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [userPaused, setUserPaused] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return undefined;
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    }, { threshold: 0.1 });
+    const loadObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setShouldLoad(true);
+        loadObserver.unobserve(video);
+      }
+    }, { rootMargin: '300px 0px', threshold: 0 });
+    visibilityObserver.observe(video);
+    loadObserver.observe(video);
+    return () => {
+      visibilityObserver.disconnect();
+      loadObserver.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (shouldLoad && videoRef.current) videoRef.current.load();
+  }, [shouldLoad]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (shouldLoad && isVisible && !userPaused) {
+      video.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+    } else {
+      video.pause();
+      setIsPlaying(false);
+    }
+  }, [shouldLoad, isVisible, userPaused]);
 
   const togglePlayback = () => {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
       setUserPaused(false);
-      video.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+      setShouldLoad(true);
+      setIsVisible(true);
     } else {
       video.pause();
       setIsPlaying(false);
@@ -75,17 +113,15 @@ function LoopVideo({ src, title }) {
       <video
         ref={videoRef}
         className="loop-video"
-        autoPlay={!userPaused}
+        src={shouldLoad ? src : undefined}
         muted={isMuted}
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         aria-label={title}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
-      >
-        <source src={src} />
-      </video>
+      />
       <div className="video-controls" aria-label={`${title} video controls`}>
         <button type="button" onClick={togglePlayback} aria-label={isPlaying ? 'Pause video' : 'Play video'} title={isPlaying ? 'Pause' : 'Play'}>
           <span aria-hidden="true">{isPlaying ? 'Ⅱ' : '▶'}</span>
