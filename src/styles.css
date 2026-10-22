@@ -44,3 +44,4 @@ footer{padding:2rem 0;font-size:.9rem;color:var(--soft);background:var(--panel);
 :root[data-theme="dark"] .btn::before{background:#f4eae3}
 :root[data-theme="dark"] .btn:hover{color:#241916}
 @media(max-width:520px){.theme-toggle{width:40px;height:40px;padding:.45rem}.theme-toggle span:last-child{display:none}}
+@media(max-width:680px){.nav-inner{gap:.5rem}.brand{font-size:1.15rem}.nav-inner>.btn{padding:.65rem .9rem;font-size:.82rem;white-space:nowrap}}
